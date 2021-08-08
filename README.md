@@ -13,8 +13,8 @@ for specific HTTP requests.
 
 ## Dependencies
 
-libuv (Asyncronous i/o library) : https://github.com/libuv/libuv
-llhttp (Http parser library) : https://github.com/nodejs/llhttp
+(libuv) [https://github.com/libuv/libuv]
+(llhttp)[https://github.com/nodejs/llhttp]
 
 ## Build
 
