@@ -1,8 +1,11 @@
 #include "../include/server.hpp"
 #include <iostream>
+#include <llhttp.h>
 
 void unetmux::server::createServer(unetmux::server::handler_cb cb)
 {
+    this->m_handler_cb = cb;
+
     this->m_loop = uv_default_loop();
 
     uv_tcp_init(this->m_loop, this->m_server);
@@ -44,7 +47,23 @@ void unetmux::server::createServer(unetmux::server::handler_cb cb)
             }, 
             [](uv_stream_t * stream, ssize_t nread, const uv_buf_t * buf)
             {
+                // static int numRead = 0;
+
+                // llhttp_settings_t settings;
+                // llhttp_t * request = new llhttp_t;
+                // llhttp_t * response = new llhttp_t;
+
+                // llhttp_settings_init(&settings);
+                // llhttp_init(request, HTTP_REQUEST, &settings);
+
+                // llhttp_errno error = llhttp_execute(request, buf->base, nread);
+
+                // // std::cout << (request->method == llhttp_method::HTTP_GET);
+
+                // std::cout << buf->base << std::endl << "=========== ";
+                // std::cout << buf->len << " " << nread;
                 std::cout << buf->base;
+                // printf("%s \n === %ld \n %ld", buf->base, buf->len, nread);
             });
         }
 

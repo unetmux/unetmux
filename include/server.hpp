@@ -29,6 +29,7 @@ namespace unetmux
             this->m_loop = new uv_loop_t;
             this->m_server = new uv_tcp_t;
             this->m_custom_data = nullptr;
+            this->m_handler_cb = nullptr;
         }
 
         void createServer(handler_cb);
