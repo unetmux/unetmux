@@ -42,28 +42,37 @@ void unetmux::server::createServer(unetmux::server::handler_cb cb)
             uv_read_start(reinterpret_cast<uv_stream_t *>(client), 
             [](uv_handle_t * handle, size_t suggested_size, uv_buf_t * buf)
             {
-                buf->base = (char *)malloc(suggested_size);
+                buf->base = new char[suggested_size];
                 buf->len = suggested_size;
             }, 
             [](uv_stream_t * stream, ssize_t nread, const uv_buf_t * buf)
             {
-                // static int numRead = 0;
+                llhttp_t request, response;
+                llhttp_settings_t settings;
 
-                // llhttp_settings_t settings;
-                // llhttp_t * request = new llhttp_t;
-                // llhttp_t * response = new llhttp_t;
+                llhttp_settings_init(&settings);
 
-                // llhttp_settings_init(&settings);
-                // llhttp_init(request, HTTP_REQUEST, &settings);
+                llhttp_init(&request, HTTP_REQUEST, &settings);
+                llhttp_init(&response, HTTP_RESPONSE, &settings);                                
 
-                // llhttp_errno error = llhttp_execute(request, buf->base, nread);
+                llhttp_errno error = llhttp_execute(&request, buf->base, buf->len);
 
-                // // std::cout << (request->method == llhttp_method::HTTP_GET);
+                if (error == HPE_OK)
+                {
+                    if (request.content_length == 0)
+                    {
+                        reinterpret_cast<unetmux::server *>(uv_handle_get_data(reinterpret_cast<uv_handle_t *>(stream)))->m_handler_cb(&request, &response);
 
-                // std::cout << buf->base << std::endl << "=========== ";
-                // std::cout << buf->len << " " << nread;
-                std::cout << buf->base;
-                // printf("%s \n === %ld \n %ld", buf->base, buf->len, nread);
+                        // uv_buf_t data = new char[1];
+                        // error = llhttp_execute(&response, )
+
+                        uv_write_t write_req;
+
+                        // uv_write(&write_req, stream, , 1, [](uv_stream_t * stream, int status) {});
+                    }
+                }
+
+
             });
         }
 

@@ -16,7 +16,6 @@ namespace unetmux
         std::vector<int8_t> * m_data;
         uv_loop_t * m_loop;
         uv_tcp_t * m_server;
-        void * m_custom_data;
         size_t m_custom_data_size;
         //Callback members
         handler_cb m_handler_cb;
@@ -28,7 +27,6 @@ namespace unetmux
             this->m_data = new std::vector<int8_t>;
             this->m_loop = new uv_loop_t;
             this->m_server = new uv_tcp_t;
-            this->m_custom_data = nullptr;
             this->m_handler_cb = nullptr;
         }
 
@@ -46,18 +44,9 @@ namespace unetmux
             return this->m_server;
         }
 
-        inline void * get_custom_data() const
-        {
-            return this->m_custom_data;
-        }
-
-        inline void set_custom_data(void * custom_data)
-        {
-            this->m_custom_data = custom_data;
-        }
-
         ~server()
         {
+            uv_close(reinterpret_cast<uv_handle_t *>(this->m_loop), [](uv_handle_t * handle) {});
             delete this->m_data;
             delete this->m_loop;
             delete this->m_server;
