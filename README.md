@@ -21,6 +21,7 @@ for specific HTTP requests.
 ```bash
 make test
 ./bin/handling_server.exe
+./bin/http_parser_test.exe
 ```
 
 ## Contributing
