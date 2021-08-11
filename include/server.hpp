@@ -44,7 +44,7 @@ namespace unetmux
             return this->m_server;
         }
 
-        ~server()
+        virtual ~server()
         {
             uv_close(reinterpret_cast<uv_handle_t *>(this->m_loop), [](uv_handle_t * handle) {});
             delete this->m_data;

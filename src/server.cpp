@@ -47,13 +47,12 @@ void unetmux::server::createServer(unetmux::server::handler_cb cb)
             }, 
             [](uv_stream_t * stream, ssize_t nread, const uv_buf_t * buf)
             {
-                llhttp_t request, response;
+                llhttp_t request;
                 llhttp_settings_t settings;
 
                 llhttp_settings_init(&settings);
 
                 llhttp_init(&request, HTTP_REQUEST, &settings);
-                llhttp_init(&response, HTTP_RESPONSE, &settings);                                
 
                 llhttp_errno error = llhttp_execute(&request, buf->base, buf->len);
 
@@ -61,7 +60,9 @@ void unetmux::server::createServer(unetmux::server::handler_cb cb)
                 {
                     if (request.content_length == 0)
                     {
-                        reinterpret_cast<unetmux::server *>(uv_handle_get_data(reinterpret_cast<uv_handle_t *>(stream)))->m_handler_cb(&request, &response);
+                        void * response;
+
+                        reinterpret_cast<unetmux::server *>(uv_handle_get_data(reinterpret_cast<uv_handle_t *>(stream)))->m_handler_cb(&request, response);
 
                         // uv_buf_t data = new char[1];
                         // error = llhttp_execute(&response, )
