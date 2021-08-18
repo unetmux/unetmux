@@ -60,19 +60,23 @@ void unetmux::server::createServer(unetmux::server::handler_cb cb)
                 {
                     if (request.content_length == 0)
                     {
-                        void * response;
+                        uv_buf_t * response = new uv_buf_t;
 
-                        reinterpret_cast<unetmux::server *>(uv_handle_get_data(reinterpret_cast<uv_handle_t *>(stream)))->m_handler_cb(&request, response);
+                        reinterpret_cast<unetmux::server *>(uv_handle_get_data(reinterpret_cast<uv_handle_t *>(stream)))->m_handler_cb(const_cast<uv_buf_t *>(buf), response);                        
 
-                        // uv_buf_t data = new char[1];
-                        // error = llhttp_execute(&response, )
+                        delete response;
 
-                        uv_write_t write_req;
+                        // uv_write_t write_req;
 
                         // uv_write(&write_req, stream, , 1, [](uv_stream_t * stream, int status) {});
                     }
+
                 }
 
+                else
+                {
+                    std::cerr << "Http parser error " << std::endl;
+                }
 
             });
         }
